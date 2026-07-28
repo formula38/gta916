@@ -32,3 +32,13 @@ This repository separates three concerns:
 - Do not commit secrets (license keys, Tebex secrets, database passwords).
 - Use `server.cfg.local` for real keys/secrets and keep template files sanitized.
 - Keep `qb-core/` aligned with upstream, and place GTA916-specific behavior in custom resources when possible.
+
+## Local secret protection
+
+Install the local pre-commit secret scanner:
+
+```bash
+./scripts/security/install-hooks.sh
+```
+
+The hook runs `gitleaks` if installed, or falls back to targeted secret-pattern checks.
