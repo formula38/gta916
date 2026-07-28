@@ -27,44 +27,49 @@ Recommended host path example:
 
 ## 3) Download official artifacts
 
-Use official FiveM runtime artifact listing and choose latest recommended Linux build.
+Run `ops/homelab/bootstrap.sh` — it scaffolds the runtime layout and downloads the latest RECOMMENDED Linux build automatically.
 
-Example steps:
+Notes learned from real setup:
 
-1. Download artifact archive (`fx.tar.xz`).
-2. Extract into `/opt/gta916/server`.
-3. Ensure runtime files are executable.
+- The old `.../master/latest/fx.tar.xz` shortcut URL no longer exists. The script parses the artifact listing page and picks the build marked "LATEST RECOMMENDED" (not the newest optional build).
+- The installed build id is recorded in `<base_dir>/server/ARTIFACT_VERSION` for upgrade tracking.
+- To upgrade later: move `<base_dir>/server` aside and re-run `bootstrap.sh`. Your `txData` is untouched.
 
 ## 4) First start and txAdmin bootstrap
 
-From the server artifact directory:
+Start via the launcher script (from the repo root):
 
-- run `./run.sh +set serverProfile default`
+```bash
+./ops/homelab/start-server.sh    # defaults to ~/gta916
+```
+
+txAdmin v8 notes:
+
+- `+set serverProfile` and `+set txAdminPort` are deprecated. The launcher sets `TXHOST_DATA_PATH` instead (and `TXHOST_TXA_PORT` exists for a custom panel port).
+- Do not pre-create `txData/default` by hand. txAdmin creates the profile on first boot and fails with error `E5110` if the folder exists without a `config.json`.
 
 Then:
 
 1. Open `http://<host-ip>:40120` (or `http://localhost:40120` when local).
 2. Enter the 4-digit pin shown in console.
 3. Link Cfx.re account and create admin credentials.
-4. Use recipe deployer (default first or QBCore if ready).
-5. Enter your server license key.
+4. Use recipe deployer (default first or QBCore if ready), or point it at existing server data wired in step 5.
 
 ## 5) Base config wiring
 
-- Keep a template in repo: `ops/homelab/server.cfg.template`
-- Copy template into runtime profile config.
-- Keep real secrets in a local-only overlay file: `server.cfg.local`.
-- Use example files as starter:
-  - `ops/homelab/server.cfg.local.example`
-  - `txData/default/server.cfg.local.example`
-- Add custom resource line for `gta916-core` after base dependencies.
+After the first boot created the profile, wire the repo into it:
 
-Recommended local flow:
+```bash
+./ops/homelab/wire-profile.sh    # defaults to ~/gta916 and profile 'default'
+```
 
-1. Copy `ops/homelab/server.cfg.template` to your runtime `server.cfg`.
-2. Copy `ops/homelab/server.cfg.local.example` to `server.cfg.local`.
-3. Fill real values in `server.cfg.local` only.
-4. Do not commit `server.cfg.local` (it is gitignored).
+This does three things:
+
+- installs `server.cfg` from `ops/homelab/server.cfg.template` (kept sanitized in git)
+- installs `server.cfg.local` from the example — put your real `sv_licenseKey` here; the file is gitignored and lives only on the host
+- symlinks `resources/[gta916]` from the repo into the profile, so resource edits in the repo go live with a `restart gta916-core` in the server console (no copy/deploy step)
+
+The scripts are idempotent: existing `server.cfg`/`server.cfg.local` files are kept, and the symlink is refreshed.
 
 ## 6) Recommended first-run order
 

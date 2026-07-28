@@ -21,11 +21,15 @@ This repository separates three concerns:
 ## Quickstart (homelab)
 
 1. Read `docs/setup/fivem-foundation.md`.
-2. Run `ops/homelab/bootstrap.sh` to scaffold local FiveM runtime directories.
-3. Follow txAdmin first-run setup and apply your server key.
-4. Use `ops/homelab/server.cfg.template` as a starting point for `server.cfg`.
-5. Start with the CFX default or QBCore recipe in txAdmin, then add `gta916-core`.
+2. `./ops/homelab/bootstrap.sh` — scaffolds `~/gta916` and downloads the recommended FXServer build.
+3. `./ops/homelab/start-server.sh` — first boot; open `http://localhost:40120`, enter the console PIN, link your Cfx.re account.
+4. `./ops/homelab/wire-profile.sh` — installs `server.cfg` + `server.cfg.local` and symlinks repo resources into the profile.
+5. Put your real `sv_licenseKey` in `~/gta916/txData/default/server.cfg.local` (gitignored), then restart the server.
 6. Run the checks in `docs/setup/private-smoke-tests.md`.
+
+## Development workflow
+
+See `docs/dev-workflow.md` for the file map (what to edit, when, and why), the live dev loop (repo symlink → `restart gta916-core`), and the current CI/CD state.
 
 ## Notes
 

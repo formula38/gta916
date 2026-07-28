@@ -1,3 +1,6 @@
+# Runtime scaffolds accidentally created inside the repo
+local-runtime/
+
 # Local secret overlays for FiveM server config
 ops/homelab/server.cfg.local
 txData/**/server.cfg.local
