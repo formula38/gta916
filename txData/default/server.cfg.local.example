@@ -1,0 +1,7 @@
+# Runtime local-only overrides (copy to server.cfg.local; file is gitignored)
+
+## Required
+sv_licenseKey "REPLACE_WITH_REAL_CFX_KEY"
+
+## Optional for Phase 2
+# sv_tebexSecret "REPLACE_WITH_REAL_TEBEX_SECRET"

@@ -1,0 +1,9 @@
+# Local secret overlays for FiveM server config
+ops/homelab/server.cfg.local
+txData/**/server.cfg.local
+
+# Common local secret/env files
+.env
+.env.*
+*.secret
+*.secrets

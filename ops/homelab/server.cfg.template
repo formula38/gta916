@@ -14,6 +14,9 @@ endpoint_add_udp "0.0.0.0:30120"
 ## FiveM key (set locally, do not commit real key)
 sv_licenseKey "REPLACE_WITH_LOCAL_LICENSE_KEY"
 
+## Load local secret overrides if present (gitignored)
+exec server.cfg.local
+
 ## Optional: Tebex (Phase 2 only)
 # sv_tebexSecret "REPLACE_WITH_LOCAL_TEBEX_SECRET"
 

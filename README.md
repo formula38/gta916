@@ -30,6 +30,5 @@ This repository separates three concerns:
 ## Notes
 
 - Do not commit secrets (license keys, Tebex secrets, database passwords).
+- Use `server.cfg.local` for real keys/secrets and keep template files sanitized.
 - Keep `qb-core/` aligned with upstream, and place GTA916-specific behavior in custom resources when possible.
-# gta916
-# gta916

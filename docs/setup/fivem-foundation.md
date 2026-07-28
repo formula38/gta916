@@ -52,8 +52,19 @@ Then:
 ## 5) Base config wiring
 
 - Keep a template in repo: `ops/homelab/server.cfg.template`
-- Copy template into runtime profile config and fill secrets locally only.
+- Copy template into runtime profile config.
+- Keep real secrets in a local-only overlay file: `server.cfg.local`.
+- Use example files as starter:
+  - `ops/homelab/server.cfg.local.example`
+  - `txData/default/server.cfg.local.example`
 - Add custom resource line for `gta916-core` after base dependencies.
+
+Recommended local flow:
+
+1. Copy `ops/homelab/server.cfg.template` to your runtime `server.cfg`.
+2. Copy `ops/homelab/server.cfg.local.example` to `server.cfg.local`.
+3. Fill real values in `server.cfg.local` only.
+4. Do not commit `server.cfg.local` (it is gitignored).
 
 ## 6) Recommended first-run order
 

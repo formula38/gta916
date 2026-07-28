@@ -22,12 +22,15 @@ Next steps:
    ${SERVER_DIR}
 3) Copy template config from repo:
    ops/homelab/server.cfg.template -> ${TXDATA_DIR}/${PROFILE}/server.cfg
-4) Fill local secrets:
+4) Copy local override example:
+   ops/homelab/server.cfg.local.example -> ${TXDATA_DIR}/${PROFILE}/server.cfg.local
+5) Fill local secrets in server.cfg.local:
    - sv_licenseKey
    - database connection string (if needed)
-5) Start server from artifact directory:
+   - sv_tebexSecret (Phase 2 only)
+6) Start server from artifact directory:
    ./run.sh +set serverProfile default
-6) Open txAdmin:
+7) Open txAdmin:
    http://localhost:40120
 EOF
 
