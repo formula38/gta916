@@ -33,6 +33,35 @@ Handy URLs once running:
 - `http://localhost:30120/gta916-core/` - human-readable server status page (the bare `:30120` root just redirects to cfx.re and is not useful for a private server)
 - `http://localhost:30120/gta916-core/health` - status JSON for scripts/monitoring
 
+## Connect and play (client side)
+
+The steps above run the SERVER. To actually get in the game you need the FiveM
+client on a Windows gaming machine:
+
+1. Own and install GTA V (Legacy) on Windows (Steam, Epic, or Rockstar). FiveM
+   requires a legitimate copy but does NOT modify your GTA V install, and using
+   FiveM does not risk your GTA:Online account.
+2. Download the FiveM client from `https://fivem.net` and run the installer.
+3. Launch FiveM. It will locate your GTA V install on first run and log you in
+   with your Cfx.re account (same one used for txAdmin).
+4. Connect to your private server: press `F8` to open the console and type:
+
+   ```
+   connect localhost:30120
+   ```
+
+   (If the client runs on a different PC than the server, use the server
+   machine's LAN IP, e.g. `connect 192.168.1.50:30120`.)
+5. You will spawn into the default freeroam map. There is no character
+   creation yet - persistent characters, jobs, and money arrive when the
+   QBCore framework layer is deployed (see `docs/setup/qbcore-stack.md`).
+6. Verify the custom resource: type `/gta916ping` in chat (`T`). You should
+   get a `pong` back from `gta916-core`.
+
+WSL2 note: Windows forwards `localhost` to WSL2 automatically, so connecting
+from the same laptop with `localhost:30120` works. From another PC on your
+LAN you would need Windows port-forwarding rules (Phase 2 territory).
+
 ## Development workflow
 
 See `docs/dev-workflow.md` for the file map (what to edit, when, and why), the live dev loop (repo symlink → `restart gta916-core`), and the current CI/CD state.
