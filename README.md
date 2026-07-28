@@ -27,6 +27,12 @@ This repository separates three concerns:
 5. Put your real `sv_licenseKey` in `~/gta916/txData/default/server.cfg.local` (gitignored), then restart the server.
 6. Run the checks in `docs/setup/private-smoke-tests.md`.
 
+Handy URLs once running:
+
+- `http://localhost:40120` - txAdmin control panel
+- `http://localhost:30120/gta916-core/` - human-readable server status page (the bare `:30120` root just redirects to cfx.re and is not useful for a private server)
+- `http://localhost:30120/gta916-core/health` - status JSON for scripts/monitoring
+
 ## Development workflow
 
 See `docs/dev-workflow.md` for the file map (what to edit, when, and why), the live dev loop (repo symlink → `restart gta916-core`), and the current CI/CD state.

@@ -17,6 +17,8 @@ Use this checklist after initial setup and after every significant update.
 
 - [ ] `qb-core` starts successfully.
 - [ ] `gta916-core` starts successfully.
+- [ ] status page loads at `http://localhost:30120/gta916-core/` (human-readable dashboard).
+- [ ] health JSON responds at `http://localhost:30120/gta916-core/health`.
 - [ ] no repeating server console errors for 10+ minutes idle.
 
 ## D) Player flow

@@ -1,4 +1,4 @@
-# Local-only overrides (copy to server.cfg.local; file is gitignored)
+# Local-only overrides (copy to server.cfg.local - file is gitignored)
 
 ## Required
 sv_licenseKey "REPLACE_WITH_REAL_CFX_KEY"
