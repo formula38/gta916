@@ -1,0 +1,3 @@
+[submodule "qb-core"]
+	path = qb-core
+	url = https://github.com/formula38/qb-core.git

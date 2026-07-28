@@ -1,0 +1,40 @@
+# Private Smoke Tests
+
+Use this checklist after initial setup and after every significant update.
+
+## A) txAdmin and runtime
+
+- [ ] `FXServer` process starts without fatal errors.
+- [ ] txAdmin is reachable on `http://<host>:40120`.
+- [ ] server profile loads expected config.
+
+## B) Network checks
+
+- [ ] port `30120` TCP/UDP reachable from LAN test client.
+- [ ] port `40120` reachable only from trusted admin network.
+
+## C) QBCore and resources
+
+- [ ] `qb-core` starts successfully.
+- [ ] `gta916-core` starts successfully.
+- [ ] no repeating server console errors for 10+ minutes idle.
+
+## D) Player flow
+
+- [ ] test player can connect and spawn.
+- [ ] at least one GTA916 custom command/event responds.
+- [ ] disconnect/reconnect path works cleanly.
+
+## E) Regression checks after updates
+
+- [ ] restart server and confirm resources auto-start in correct order.
+- [ ] run one event/interaction that exercises DB writes (if enabled).
+- [ ] verify no new warnings around permissions/exports/dependencies.
+
+## F) Logging evidence
+
+Capture and store:
+
+- server startup log snippet
+- txAdmin status screenshot
+- notes for any warnings and mitigation decisions

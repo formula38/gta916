@@ -1,0 +1,39 @@
+# GTA916 server.cfg template
+# Copy to your txAdmin profile config and fill with local secrets.
+
+## Core identity
+sv_hostname "GTA916 | Private Foundation"
+sets sv_projectName "GTA916"
+sets sv_projectDesc "Private homelab foundation build"
+sv_maxclients 16
+
+## Network
+endpoint_add_tcp "0.0.0.0:30120"
+endpoint_add_udp "0.0.0.0:30120"
+
+## FiveM key (set locally, do not commit real key)
+sv_licenseKey "REPLACE_WITH_LOCAL_LICENSE_KEY"
+
+## Optional: Tebex (Phase 2 only)
+# sv_tebexSecret "REPLACE_WITH_LOCAL_TEBEX_SECRET"
+
+## Database example (if recipe requires it)
+# set mysql_connection_string "mysql://user:pass@127.0.0.1/gta916?charset=utf8mb4"
+
+## Basic permission example
+add_ace group.admin command allow
+add_principal identifier.fivem:YOUR_FIVEM_ID group.admin
+
+## Resource start order (adjust to recipe output)
+ensure mapmanager
+ensure chat
+ensure spawnmanager
+ensure sessionmanager
+ensure hardcap
+ensure rconlog
+
+## Framework (managed by recipe; keep aligned with deployed resources)
+# ensure qb-core
+
+## GTA916 custom resources
+ensure gta916-core
