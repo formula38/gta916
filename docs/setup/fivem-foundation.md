@@ -63,11 +63,14 @@ After the first boot created the profile, wire the repo into it:
 ./ops/homelab/wire-profile.sh    # defaults to ~/gta916 and profile 'default'
 ```
 
-This does three things:
+This does four things:
 
 - installs `server.cfg` from `ops/homelab/server.cfg.template` (kept sanitized in git)
 - installs `server.cfg.local` from the example — put your real `sv_licenseKey` here; the file is gitignored and lives only on the host
+- clones `cfx-server-data` and symlinks its resource categories — the default resources (`mapmanager`, `chat`, `spawnmanager`, `sessionmanager`, `basic-gamemode`, etc.) are NOT bundled in the server artifact, and players cannot spawn without them
 - symlinks `resources/[gta916]` from the repo into the profile, so resource edits in the repo go live with a `restart gta916-core` in the server console (no copy/deploy step)
+
+Note on visibility: the template ships with `sv_master1 ""` (private mode, not announced to the public server list). Without it, a non-internet-reachable server logs `Server list query returned an error ... context deadline exceeded` — harmless, but noisy. Remove that line in Phase 2 when going public with proper port forwarding.
 
 The scripts are idempotent: existing `server.cfg`/`server.cfg.local` files are kept, and the symlink is refreshed.
 

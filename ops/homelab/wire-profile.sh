@@ -37,6 +37,20 @@ else
 fi
 
 mkdir -p "${PROFILE_DIR}/resources"
+
+# Cfx default resources (mapmanager, chat, spawnmanager, sessionmanager, etc.)
+# are NOT bundled in the server artifact - they live in the cfx-server-data
+# repo. Without them players cannot spawn.
+CFX_DATA_DIR="${BASE_DIR}/cfx-server-data"
+if [ ! -d "${CFX_DATA_DIR}/resources" ]; then
+  echo "Cloning cfx-server-data (default resources)..."
+  git clone --depth 1 https://github.com/citizenfx/cfx-server-data.git "${CFX_DATA_DIR}"
+fi
+for category in "${CFX_DATA_DIR}/resources"/*/; do
+  ln -sfn "${category}" "${PROFILE_DIR}/resources/$(basename "${category}")"
+done
+echo "Symlinked cfx-server-data resource categories."
+
 ln -sfn "${REPO_ROOT}/resources/[gta916]" "${PROFILE_DIR}/resources/[gta916]"
 echo "Symlinked repo resources: ${PROFILE_DIR}/resources/[gta916] -> ${REPO_ROOT}/resources/[gta916]"
 
