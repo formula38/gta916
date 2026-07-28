@@ -32,3 +32,4 @@ This repository separates three concerns:
 - Do not commit secrets (license keys, Tebex secrets, database passwords).
 - Keep `qb-core/` aligned with upstream, and place GTA916-specific behavior in custom resources when possible.
 # gta916
+# gta916
