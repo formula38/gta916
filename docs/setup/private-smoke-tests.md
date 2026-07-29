@@ -4,9 +4,10 @@ Use this checklist after initial setup and after every significant update.
 
 ## A) txAdmin and runtime
 
-- [ ] `FXServer` process starts without fatal errors.
+- [ ] server process (`Cfx Server` on Enhanced, `FXServer` on legacy) starts without fatal errors.
 - [ ] txAdmin is reachable on `http://<host>:40120`.
 - [ ] server profile loads expected config.
+- [ ] (Enhanced) startup log shows no update prompt, or note the newer build for the next artifact refresh.
 
 ## B) Network checks
 
@@ -23,7 +24,7 @@ Use this checklist after initial setup and after every significant update.
 
 ## D) Player flow
 
-- [ ] test player can connect and spawn.
+- [ ] test player can connect and spawn (Enhanced runtime requires the separate FiveM for GTAV Enhanced client + GTA V Enhanced install).
 - [ ] at least one GTA916 custom command/event responds.
 - [ ] disconnect/reconnect path works cleanly.
 

@@ -20,12 +20,20 @@ This repository separates three concerns:
 
 ## Quickstart (homelab)
 
-1. Read `docs/setup/fivem-foundation.md`.
-2. `./ops/homelab/bootstrap.sh` — scaffolds `~/gta916` and downloads the recommended FXServer build.
-3. `./ops/homelab/start-server.sh` — first boot; open `http://localhost:40120`, enter the console PIN, link your Cfx.re account.
-4. `./ops/homelab/wire-profile.sh` — installs `server.cfg` + `server.cfg.local` and symlinks repo resources into the profile.
-5. Put your real `sv_licenseKey` in `~/gta916/txData/default/server.cfg.local` (gitignored), then restart the server.
+GTA916 targets **FiveM for GTAV Enhanced** (early access since July 21, 2026).
+See `docs/setup/gtav-enhanced.md` for background and caveats.
+
+1. Read `docs/setup/fivem-foundation.md`, then `docs/setup/gtav-enhanced.md`.
+2. `./ops/homelab/bootstrap-enhanced.sh` — scaffolds `~/gta916` and downloads the current Cfx Server (Enhanced) build.
+3. `./ops/homelab/start-server-enhanced.sh` — first boot; open `http://localhost:40120`, enter the console PIN, link your Cfx.re account.
+4. `./ops/homelab/wire-profile.sh ~/gta916 default txData-enhanced` — installs `server.cfg` + `server.cfg.local` and symlinks repo resources into the profile.
+5. Put your real `sv_licenseKey` in `~/gta916/txData-enhanced/default/server.cfg.local` (gitignored), then restart the server.
 6. Run the checks in `docs/setup/private-smoke-tests.md`.
+
+The legacy (pre-Enhanced) flow still works via `bootstrap.sh` / `start-server.sh`
+/ `wire-profile.sh` with default args, and the legacy runtime in `~/gta916/server`
++ `~/gta916/txData` is kept as a fallback. Only run one server at a time — both
+use ports 30120/40120.
 
 Handy URLs once running:
 
@@ -38,12 +46,14 @@ Handy URLs once running:
 The steps above run the SERVER. To actually get in the game you need the FiveM
 client on a Windows gaming machine:
 
-1. Own and install GTA V (Legacy) on Windows (Steam, Epic, or Rockstar). FiveM
+1. Own and install GTA V Enhanced on Windows (Steam, Epic, or Rockstar). FiveM
    requires a legitimate copy but does NOT modify your GTA V install, and using
    FiveM does not risk your GTA:Online account.
-2. Download the FiveM client from `https://fivem.net` and run the installer.
-3. Launch FiveM. It will locate your GTA V install on first run and log you in
-   with your Cfx.re account (same one used for txAdmin).
+2. Download the **FiveM for GTAV Enhanced** client from `https://fivem.net` and
+   run the installer. (It is a separate launcher from legacy FiveM; the legacy
+   client only works with GTA V Legacy and the legacy server.)
+3. Launch it. It will locate your GTA V Enhanced install on first run and log
+   you in with your Cfx.re account (same one used for txAdmin).
 4. Connect to your private server: press `F8` to open the console and type:
 
    ```

@@ -8,6 +8,7 @@ sets sv_projectDesc "Private homelab foundation build"
 sv_maxclients 16
 
 ## Network
+## (Enhanced note: endpoint_add_tcp/udp accept only ONE endpoint each now.)
 endpoint_add_tcp "0.0.0.0:30120"
 endpoint_add_udp "0.0.0.0:30120"
 
@@ -36,10 +37,21 @@ ensure mapmanager
 ensure chat
 ensure spawnmanager
 ensure sessionmanager
+## Start the freeroam map at boot. On Enhanced early access, maps started
+## dynamically by mapmanager can fail cache generation ("Failed to generate
+## cache for set: resource.rpf") - starting at boot avoids that and pins
+## the map deterministically.
+ensure fivem-map-hipster
 ensure basic-gamemode
 ensure baseevents
 ensure hardcap
 ensure rconlog
+
+## GTAV Enhanced (early access) notes - these lines are harmless on legacy:
+## - Pure mode is always ON in Enhanced - graphics mods are blocked in early access.
+## - Enhanced supports only the latest gamebuild and loads it by default.
+## - Uncomment to enable client dev tools on Enhanced (caps server at 8 slots):
+# sv_devMode true
 
 ## Framework (managed by recipe - keep aligned with deployed resources)
 # ensure qb-core

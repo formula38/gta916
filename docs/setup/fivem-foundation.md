@@ -2,6 +2,12 @@
 
 This document sets up a local/private GTA916 FiveM foundation using official artifacts and txAdmin.
 
+> **Current direction:** GTA916 targets FiveM for **GTAV Enhanced** (early
+> access). The concepts below (txAdmin, profiles, config layout, resources)
+> apply to both editions, but use the Enhanced scripts and read
+> `docs/setup/gtav-enhanced.md` first. The legacy flow documented here remains
+> valid as a fallback runtime.
+
 ## 1) Prerequisites
 
 - Ubuntu/Debian host (WSL/dev is fine for local prep; production homelab should be native Linux VM or bare metal)

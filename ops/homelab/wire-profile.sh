@@ -6,15 +6,18 @@ set -euo pipefail
 # - installs server.cfg.local from the example (if not present)
 # - symlinks the repo resources category for a live dev loop
 #
-# Usage: ./wire-profile.sh [base_dir] [profile]
-#   base_dir defaults to ~/gta916, profile defaults to 'default'
+# Usage: ./wire-profile.sh [base_dir] [profile] [txdata_name]
+#   base_dir defaults to ~/gta916, profile defaults to 'default',
+#   txdata_name defaults to 'txData' (use 'txData-enhanced' for the
+#   FiveM for GTAV Enhanced runtime).
 #
 # Run this AFTER the first txAdmin boot (the profile must already exist).
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 BASE_DIR="${1:-$HOME/gta916}"
 PROFILE="${2:-default}"
-PROFILE_DIR="${BASE_DIR}/txData/${PROFILE}"
+TXDATA_NAME="${3:-txData}"
+PROFILE_DIR="${BASE_DIR}/${TXDATA_NAME}/${PROFILE}"
 
 if [ ! -d "${PROFILE_DIR}" ]; then
   echo "Profile not found: ${PROFILE_DIR}" >&2
