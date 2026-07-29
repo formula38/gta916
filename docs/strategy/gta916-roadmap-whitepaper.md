@@ -55,6 +55,26 @@ Key technical documents: `docs/setup/fivem-foundation.md`,
 `docs/setup/gtav-enhanced.md`, `docs/setup/qbcore-stack.md`,
 `docs/policy/monetization-readiness.md`, `docs/dev-workflow.md`.
 
+### Data architecture: two stores, one dialect each
+
+No single database serves both workloads well; GTA916 deliberately runs two:
+
+1. **Gameplay OLTP - MariaDB.** QBCore and effectively all marketplace
+   resources are built on oxmysql (MySQL-dialect SQL throughout). Using
+   Postgres here would mean forking the data layer of the framework and
+   every installed resource, permanently. The workload (player rows,
+   inventories, point queries) is small OLTP that gains nothing from a
+   heavier engine. MariaDB is the compatibility choice, not a preference.
+2. **Analytics & telemetry - PostgreSQL (AlloyDB-style).** From Phase 2,
+   KPI tracking, economy analysis, and dashboards live in a separate
+   Postgres store (local instance first; AlloyDB / AlloyDB Omni later if
+   columnar/scale capabilities are wanted). Feed it via nightly ETL from
+   MariaDB and/or game events emitted by `[gta916]` resources to a small
+   collector. All ML/embedding/analysis work happens here.
+
+This split keeps a clean failure boundary (analytics can break without
+touching gameplay) and puts each engine where its strengths matter.
+
 ## 4. Roadmap
 
 Phase gates are checkpoints: do not advance until the exit criteria are met.
@@ -69,7 +89,8 @@ Goal: a stable, private Enhanced server with the full framework stack.
 - [x] Migration to GTAV Enhanced: Cfx Server b98-ea + txAdmin v9 (2026-07-28)
 - [x] `gta916-core` running on Enhanced with status/health endpoints
 - [ ] First in-game connect with the Enhanced client (`/gta916ping`)
-- [ ] MySQL/MariaDB installed and reachable for QBCore
+- [ ] MariaDB installed and reachable for QBCore (gameplay OLTP store -
+      see "Data architecture" below)
 - [ ] QBCore deployed on Enhanced, full smoke test pass
 - [ ] Weekly artifact-update habit established (Enhanced hotfixes)
 
@@ -88,6 +109,8 @@ Goal: the 916 identity exists in-game and the server survives strangers.
 - [ ] Discord server with whitelist/onboarding flow
 - [ ] Closed alpha: 5-15 invited players, at least 4 test sessions
 - [ ] Backup automation (database + txData) and restore drill
+- [ ] Analytics store stood up: PostgreSQL instance + first ETL/event feed
+      from the game server (see "Data architecture")
 - [ ] Hosting decision: keep homelab (port forward, UPS, static IP/DDNS) or
       move to a dedicated box/VPS - decide by Sep 15
 - [ ] Content channels publishing weekly from build/alpha footage

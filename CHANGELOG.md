@@ -15,6 +15,15 @@ Format per entry:
 
 ---
 
+## 2026-07-28 - Decided two-store data architecture
+
+- Whitepaper now specifies: MariaDB for gameplay OLTP (QBCore/oxmysql
+  compatibility constraint), PostgreSQL (AlloyDB-style) as a separate
+  analytics/telemetry store from Phase 2.
+- Rationale: no single dialect fits both; Postgres on the game side would
+  mean permanently forking QBCore's data layer, while analytics is where
+  Postgres capabilities actually pay off.
+
 ## 2026-07-28 - Added roadmap whitepaper, Cursor rules and skills
 
 - New umbrella doc `docs/strategy/gta916-roadmap-whitepaper.md`: four-phase
