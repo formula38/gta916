@@ -15,6 +15,19 @@ Format per entry:
 
 ---
 
+## 2026-07-28 - Added roadmap whitepaper, Cursor rules and skills
+
+- New umbrella doc `docs/strategy/gta916-roadmap-whitepaper.md`: four-phase
+  roadmap to mid-October launch with exit criteria, operating model,
+  revenue plan, risks, KPIs. Started this changelog.
+- Added project Cursor rules (`.cursor/rules/`): core conventions
+  (always-on), server-config gotchas, resource development standards.
+- Added project Cursor skills (`.cursor/skills/`): `server-ops` (operate/
+  troubleshoot the homelab server), `smoke-test` (automated validation),
+  `changelog-entry` (this format), `content-drop` (turn milestones into
+  channel content). Operational knowledge now loads automatically in
+  future agent sessions.
+
 ## 2026-07-28 - Migrated to FiveM for GTAV Enhanced (early access)
 
 - Switched the target platform from GTAV Legacy to GTAV Enhanced (early

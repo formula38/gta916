@@ -1,0 +1,26 @@
+---
+description: FiveM resource development conventions for GTA916 custom resources
+globs: resources/**
+alwaysApply: false
+---
+
+# Resource Development
+
+- Custom resources live under `resources/[gta916]/<name>/` with
+  `fxmanifest.lua` (`fx_version 'cerulean'`, `game 'gta5'`), `server/` and
+  `client/` script folders.
+- The category folder is symlinked into the live profile, so edits are live:
+  after changing a resource, restart just that resource from the txAdmin
+  console (`restart gta916-core`) - no full server restart needed. New files
+  or fxmanifest changes require `refresh` first.
+- Server-side HTTP endpoints (like the `gta916-core` status page and
+  `/health` JSON) are served via `SetHttpHandler` on the game port
+  (`:30120/<resource>/...`). Keep `/health` machine-readable JSON - it is
+  used for monitoring.
+- Enhanced compatibility: Lua/JS natives are backward compatible, but any
+  streamed asset (`.rpf`, models, maps) must be Enhanced-converted with
+  Alchemist. Do not add legacy streamed assets to resources.
+- Framework integration: depend on `qb-core` exports from custom resources;
+  never edit the `qb-core/` submodule for GTA916-specific behavior.
+- Prefix log lines with the resource name (e.g. `[gta916-core]`) so txAdmin
+  console output stays scannable.

@@ -1,0 +1,41 @@
+---
+description: FiveM server.cfg and ops script gotchas for GTA916
+globs: ops/homelab/**,txData/**
+alwaysApply: false
+---
+
+# Server Config Rules
+
+## server.cfg gotchas (learned the hard way)
+
+- **No semicolons in comments.** FXServer parses `;` as a command separator,
+  producing "No such command" errors. Use dashes instead.
+
+```
+# BAD:  ensure chat ; default resource
+# GOOD: ensure chat - default resource
+```
+
+- **Enhanced accepts a single endpoint** per `endpoint_add_tcp`/`_udp`.
+- `sv_master1 ""` keeps the server off the public list (private mode).
+  Removing it is a Phase 3 launch action, not a casual edit.
+- `ensure fivem-map-hipster` must stay before `basic-gamemode`: maps started
+  dynamically by mapmanager fail cache generation on Enhanced early access.
+- `exec server.cfg.local` loads local secrets - keep it after the
+  placeholder keys so local values win.
+
+## Keep template and runtime in sync
+
+`ops/homelab/server.cfg.template` is the source of truth. When editing it,
+apply the same change to the live profile at
+`~/gta916/txData-enhanced/default/server.cfg` (wire-profile.sh only installs
+the template when no config exists; it never overwrites).
+
+## Scripts
+
+- `bootstrap-enhanced.sh` / `start-server-enhanced.sh` / `wire-profile.sh
+  ~/gta916 default txData-enhanced` is the Enhanced flow; legacy flow uses
+  the non-suffixed scripts with default args.
+- Never pre-create a txAdmin profile folder - txAdmin creates it on first
+  boot (error E5110 otherwise).
+- txAdmin data path is set via `TXHOST_DATA_PATH` env var, not ConVars.

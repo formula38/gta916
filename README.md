@@ -81,6 +81,8 @@ LAN you would need Windows port-forwarding rules (Phase 2 territory).
 
 See `docs/dev-workflow.md` for the file map (what to edit, when, and why), the live dev loop (repo symlink → `restart gta916-core`), and the current CI/CD state.
 
+Agent automation lives in `.cursor/`: rules (`.cursor/rules/`) enforce project conventions and config gotchas; skills (`.cursor/skills/`) cover server operations, smoke testing, changelog entries, and content drops.
+
 ## Notes
 
 - Do not commit secrets (license keys, Tebex secrets, database passwords).

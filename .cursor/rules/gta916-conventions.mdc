@@ -1,0 +1,39 @@
+---
+description: Core GTA916 project conventions - platform, secrets, changelog, monetization guardrails
+alwaysApply: true
+---
+
+# GTA916 Conventions
+
+GTA916 is a Sacramento (916)-themed FiveM roleplay server plus content
+channels (faceless YouTube, streaming, marketing). Umbrella plan:
+`docs/strategy/gta916-roadmap-whitepaper.md`. Public soft launch target:
+mid-October 2026.
+
+## Platform
+
+- Target platform is **FiveM for GTAV Enhanced** (early access). Server
+  component is "Cfx Server", runtime lives at `~/gta916/server-enhanced` +
+  `~/gta916/txData-enhanced`. Legacy runtime (`~/gta916/server`, `~/gta916/txData`)
+  is a fallback only. Both share ports 30120/40120 - never run both.
+- Enhanced quirks and fixes: `docs/setup/gtav-enhanced.md`. Check it before
+  debugging startup errors.
+
+## Non-negotiables
+
+- **Secrets never enter the repo.** Real keys go in runtime
+  `server.cfg.local` (gitignored). Templates use `REPLACE_WITH_*`
+  placeholders. Pre-commit secret scan must stay installed.
+- **Changelog every session.** Any meaningful change gets an entry in
+  `CHANGELOG.md` (newest first, `## YYYY-MM-DD - title` format).
+- **Smoke tests before declaring anything working:**
+  `docs/setup/private-smoke-tests.md`.
+- **Monetization is Tebex-only and never pay-to-win.** Check
+  `docs/policy/monetization-readiness.md` before any store/monetization work.
+- Custom gameplay logic goes in `resources/[gta916]/`, not in the `qb-core/`
+  fork (keep it mergeable with upstream).
+
+## Commit style
+
+Short imperative subject, body explains why. Push after committing (the
+repo is the single source of truth for operational knowledge).
