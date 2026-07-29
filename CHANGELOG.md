@@ -15,6 +15,16 @@ Format per entry:
 
 ---
 
+## 2026-07-28 - Formalized three persistence layers
+
+- Pipeline doc now defines transactional (MariaDB OLTP), operational
+  (Postgres `ops` schema: append-only events, health snapshots, live-state
+  views) and analytical (Postgres `analytics` schema: derived materialized
+  views only) layers with one-way flow and per-layer retention.
+- Write rules: only collector/poller/ETL write `ops`; `analytics` is
+  refresh-only. Grafana reads `ops` for health/alerting, `analytics` for
+  KPIs.
+
 ## 2026-07-28 - Designed analytics pipeline
 
 - New `docs/setup/analytics-pipeline.md`: append-only events table in

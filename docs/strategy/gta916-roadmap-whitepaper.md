@@ -72,6 +72,13 @@ No single database serves both workloads well; GTA916 deliberately runs two:
    MariaDB and/or game events emitted by `[gta916]` resources to a small
    collector. All ML/embedding/analysis work happens here.
 
+Within Postgres, persistence is layered: an **operational** layer (`ops`
+schema - append-only events, health snapshots, live-state views for
+monitoring/alerting) and an **analytical** layer (`analytics` schema -
+derived materialized views for KPIs and reviews). Together with the
+MariaDB **transactional** layer this forms three persistence layers with
+one-way flow: transactional → operational → analytical.
+
 This split keeps a clean failure boundary (analytics can break without
 touching gameplay) and puts each engine where its strengths matter.
 Collection, schema, persistence, and dashboard design:

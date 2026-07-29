@@ -1,8 +1,25 @@
 # Analytics Pipeline (Collect → Populate → Persist → View)
 
-Design for the PostgreSQL analytics store defined in the whitepaper's
-"Data architecture" section. Gameplay stays on MariaDB; everything here is
+Design for the PostgreSQL store defined in the whitepaper's "Data
+architecture" section. Gameplay stays on MariaDB; everything here is
 read-only with respect to the game and can fail without touching gameplay.
+
+## Three persistence layers
+
+| Layer | Store | Holds | Serves | Retention |
+| --- | --- | --- | --- | --- |
+| **Transactional (OLTP)** | MariaDB | Authoritative gameplay state: players, inventories, vehicles, jobs | QBCore, synchronous game reads/writes | Live state + nightly backups |
+| **Operational (ODS)** | Postgres schema `ops` | Raw events, health snapshots, active sessions, "what is happening right now" | Monitoring, alerting, incident response, live ops views | Hot: 30-90 days full fidelity; events partitions 12 months |
+| **Analytical** | Postgres schema `analytics` | Derived materialized views: KPIs, cohorts, economy aggregates, revenue | Dashboards, weekly/monthly reviews, product decisions | Aggregates kept indefinitely (small) |
+
+Rules between layers:
+
+- Data flows one way: transactional → operational → analytical. Nothing
+  reads backward, and the game never depends on Postgres.
+- The operational layer is the **source of truth for history** (append-only
+  raw events); the analytical layer is 100% derived and rebuildable from it.
+- Each layer fails independently: analytics refresh can break without
+  affecting alerting; all of Postgres can break without affecting gameplay.
 
 ## Principles
 
@@ -16,14 +33,15 @@ read-only with respect to the game and can fail without touching gameplay.
 ## Architecture
 
 ```
-[gta916 resources] --events (HTTP JSON)--> [collector] --insert--> Postgres
-[/gta916-core/health] --cron poll (1 min)-------------------------^
-[MariaDB]           --nightly ETL snapshot------------------------^
-[Tebex]             --webhooks (Phase 3)--------------------------^
-                                                                   |
-                              materialized views (refreshed hourly/daily)
-                                                                   |
-                                                            [Grafana]
+TRANSACTIONAL          OPERATIONAL (ops schema)              ANALYTICAL (analytics schema)
+[MariaDB/QBCore]       [collector] --insert--> ops.events    analytics.* materialized views
+      |                     ^                  ops.health_snapshots        ^
+      |  nightly ETL        | events (HTTP)    ops.active_sessions (view)  | hourly/nightly
+      +---------------------|------------------------+--------------------+
+[gta916 resources] ---------+                         |
+[/gta916-core/health] --cron poll (1 min)-------------+           [Grafana]
+[Tebex webhooks (Phase 3)] ---------------------------+       (reads ops for health,
+                                                                analytics for KPIs)
 ```
 
 ## 1) Collect
@@ -67,8 +85,11 @@ logic in the collector - that belongs in SQL views.
 ## 2) Populate & persist (Postgres schema)
 
 ```sql
--- raw layer: append-only, partitioned by month
-CREATE TABLE events (
+CREATE SCHEMA ops;        -- operational layer (ODS)
+CREATE SCHEMA analytics;  -- analytical layer (derived only)
+
+-- OPERATIONAL: append-only raw events, partitioned by month
+CREATE TABLE ops.events (
   id           bigint GENERATED ALWAYS AS IDENTITY,
   event_type   text        NOT NULL,
   occurred_at  timestamptz NOT NULL,
@@ -78,28 +99,47 @@ CREATE TABLE events (
   PRIMARY KEY (id, occurred_at)
 ) PARTITION BY RANGE (occurred_at);
 
-CREATE TABLE health_snapshots (
+CREATE TABLE ops.health_snapshots (
   id          bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   captured_at timestamptz NOT NULL DEFAULT now(),
   payload     jsonb       NOT NULL
 );
 
--- derived layer: materialized views, all rebuildable
-CREATE MATERIALIZED VIEW daily_active_players AS
+-- OPERATIONAL: live-state views (plain views - always current)
+CREATE VIEW ops.active_sessions AS
+  SELECT player_id, max(occurred_at) AS logged_in_at
+  FROM ops.events e
+  WHERE event_type = 'player_login'
+    AND NOT EXISTS (SELECT 1 FROM ops.events o
+                    WHERE o.event_type = 'player_logout'
+                      AND o.player_id = e.player_id
+                      AND o.occurred_at > e.occurred_at)
+  GROUP BY player_id;
+
+-- ANALYTICAL: materialized views, all rebuildable from ops.events
+CREATE MATERIALIZED VIEW analytics.daily_active_players AS
   SELECT occurred_at::date AS day, count(DISTINCT player_id) AS dap
-  FROM events WHERE event_type = 'player_login' GROUP BY 1;
+  FROM ops.events WHERE event_type = 'player_login' GROUP BY 1;
 
 -- weekly returning players = the north-star KPI
-CREATE MATERIALIZED VIEW weekly_returning_players AS
+CREATE MATERIALIZED VIEW analytics.weekly_returning_players AS
   WITH weekly AS (
     SELECT date_trunc('week', occurred_at) AS wk, player_id
-    FROM events WHERE event_type = 'player_login' GROUP BY 1, 2)
+    FROM ops.events WHERE event_type = 'player_login' GROUP BY 1, 2)
   SELECT w.wk, count(*) FILTER (
     WHERE EXISTS (SELECT 1 FROM weekly p
                   WHERE p.player_id = w.player_id
                     AND p.wk = w.wk - interval '1 week')) AS returning
   FROM weekly w GROUP BY 1;
 ```
+
+Layer conventions:
+
+- `ops.*` may only be written by the collector, the health poller, and ETL
+  jobs. `analytics.*` is never written directly - only `CREATE/REFRESH
+  MATERIALIZED VIEW` from `ops` sources.
+- Grafana's health/alerting dashboards read `ops.*` (freshness matters);
+  KPI/business dashboards read `analytics.*` (consistency matters).
 
 Refresh cadence: hourly for operational views, nightly for cohort/retention
 views (`REFRESH MATERIALIZED VIEW`, driven by cron or pg_cron).
