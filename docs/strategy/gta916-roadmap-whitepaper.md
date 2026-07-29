@@ -74,6 +74,8 @@ No single database serves both workloads well; GTA916 deliberately runs two:
 
 This split keeps a clean failure boundary (analytics can break without
 touching gameplay) and puts each engine where its strengths matter.
+Collection, schema, persistence, and dashboard design:
+`docs/setup/analytics-pipeline.md`.
 
 ## 4. Roadmap
 

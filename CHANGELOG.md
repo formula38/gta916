@@ -15,6 +15,15 @@ Format per entry:
 
 ---
 
+## 2026-07-28 - Designed analytics pipeline
+
+- New `docs/setup/analytics-pipeline.md`: append-only events table in
+  Postgres (partitioned, JSONB), fed by health polling (v0), gameplay
+  events from [gta916] resources via a small collector (v1, Phase 2), and
+  Tebex webhooks + MariaDB ETL (v2, Phase 3). Materialized views derive
+  all KPIs; Grafana for dashboards and launch-week down-alerting.
+- Whitepaper data-architecture section links to it.
+
 ## 2026-07-28 - Decided two-store data architecture
 
 - Whitepaper now specifies: MariaDB for gameplay OLTP (QBCore/oxmysql
