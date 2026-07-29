@@ -72,6 +72,11 @@ WSL2 note: Windows forwards `localhost` to WSL2 automatically, so connecting
 from the same laptop with `localhost:30120` works. From another PC on your
 LAN you would need Windows port-forwarding rules (Phase 2 territory).
 
+## Roadmap and changelog
+
+- `docs/strategy/gta916-roadmap-whitepaper.md` - the umbrella document: vision, phased roadmap with exit criteria, operating model, revenue plan, risks, KPIs.
+- `CHANGELOG.md` - operational log; add an entry for every working session or meaningful change.
+
 ## Development workflow
 
 See `docs/dev-workflow.md` for the file map (what to edit, when, and why), the live dev loop (repo symlink → `restart gta916-core`), and the current CI/CD state.
