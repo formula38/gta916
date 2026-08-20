@@ -98,8 +98,8 @@ Goal: a stable, private Enhanced server with the full framework stack.
 - [x] Migration to GTAV Enhanced: Cfx Server b98-ea + txAdmin v9 (2026-07-28)
 - [x] `gta916-core` running on Enhanced with status/health endpoints
 - [ ] First in-game connect with the Enhanced client (`/gta916ping`)
-- [ ] MariaDB installed and reachable for QBCore (gameplay OLTP store -
-      see "Data architecture" below)
+- [x] MariaDB installed and reachable for QBCore (2026-08-19: Docker
+      container `gta916-mariadb`, see `ops/homelab/start-db.sh`)
 - [ ] QBCore deployed on Enhanced, full smoke test pass
 - [ ] Weekly artifact-update habit established (Enhanced hotfixes)
 

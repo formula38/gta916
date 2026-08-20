@@ -15,6 +15,21 @@ Format per entry:
 
 ---
 
+## 2026-08-19 - MariaDB deployed (transactional layer live)
+
+- MariaDB 11.4 running as Docker container `gta916-mariadb` (port 3306
+  bound to localhost, data persisted in `~/gta916/mariadb-data`,
+  `--restart unless-stopped`). New idempotent `ops/homelab/start-db.sh`
+  creates/starts it and generates credentials into `~/gta916/.mariadb.env`
+  (mode 600, outside repo).
+- oxmysql connection string added to the Enhanced profile's
+  `server.cfg.local`. Database `gta916`, user `qbcore` verified with a
+  live query.
+- Enhanced server restarted after laptop reboot - clean boot, health
+  endpoint OK. Client side now installed (GTA V Enhanced + FiveM Enhanced
+  client, Cfx sign-in works). Remaining Phase 1: in-game connect test,
+  QBCore deployment.
+
 ## 2026-07-28 - Formalized three persistence layers
 
 - Pipeline doc now defines transactional (MariaDB OLTP), operational
